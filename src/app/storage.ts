@@ -1,0 +1,6 @@
+export const LIST_HABILIDADES : string[] = [
+    ".NET","JAVA","AWS","SQL","NO-SQL","PYTHON","JAVASCRIPT","TYPESCRIPT"
+]
+export const LIST_REDES_SOCIALES : string[] = [
+    "LINKEDIN","INSTAGRAM","FACEBOOK","GITHUB","STACKOVERFLOW"
+]

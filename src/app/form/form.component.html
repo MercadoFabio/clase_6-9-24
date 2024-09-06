@@ -1,0 +1,94 @@
+<form #form="ngForm" (ngSubmit)="sendForm(form)" class="mt-2 container row g-3 needs-validation ">
+    <h1>Formulario De trabajo</h1>
+    <div class="col-md-6">
+        <label class="form-label">Nombre</label>
+        <input [ngClass]="{'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),'is-valid':nombre.valid}"
+            #nombre="ngModel" type="text" class="form-control" name="nombre" [(ngModel)]="programador.nombre" required
+            minlength="5">
+        @if(nombre.invalid && (nombre.dirty || nombre.touched)){
+        @if(nombre.getError('required')){
+
+        <div class="text-danger">El nombre es obligatorio</div>
+        }@else {
+        <div class="text-danger">El nombre debe contener como minimo 5 carateres</div>
+
+        }
+        }
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom02" class="form-label">Apellido</label>
+        <input #apellido="ngModel"
+            [ngClass]="{'is-invalid': apellido.invalid && (apellido.dirty || apellido.touched) ,'is-valid':apellido.valid}"
+            type="text" class="form-control" name="apellido" [(ngModel)]="programador.apellido" required>
+        @if (apellido.getError('required') && (apellido.dirty || apellido.touched)) {
+        <div class="text-danger">EL apellido es obligatorio.</div>
+        }
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustomUsername" class="form-label">Puesto:</label>
+        <div class="input-group has-validation">
+            <input type="text" class="form-control" name="puestoPostulacion" [(ngModel)]="programador.puestoPostulacion"
+                required>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom03" class="form-label">Ciudad:</label>
+        <input type="text" class="form-control" name="ciudad" [(ngModel)]="programador.ciudad" required>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustomUsername" class="form-label">Remuneracion:</label>
+        <div class="input-group has-validation">
+            <input type="number" class="form-control" name="remuneracion" [(ngModel)]="programador.remuneracion"
+                required>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <label for="validationCustom04" class="form-label ">Habilidades</label>
+        <select class="form-select" name="habilidadSeleccionada"
+            [(ngModel)]="habilidadSeleccionada">
+            <option selected disabled value="">Choose...</option>
+            @for (item of habilidades; track $index) {
+            <option [value]="item">{{item}}</option>
+            }
+        </select>
+        <div>
+
+            <button class="btn btn-primary mt-2" (click)="agregarHabilidades()">+</button>
+        </div>
+        @if(programador.habilidades.length > 0){
+        @for (item of programador.habilidades; track $index) {
+        <span class="badge bg-primary m-1">{{item}}
+            <button type="button" class="btn-close btn-close-white" (click)="eliminarhabilidad($index)"></button>
+        </span>
+        }}
+    </div>
+
+
+    <div class="container mt-2" ngModelGroup="contacto">
+        <h3>Datos de contacto</h3>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label for="validationCustom05" class="form-label">Email</label>
+                <input type="text" class="form-control" name="email" [(ngModel)]="programador.contacto.email" required>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom04" class="form-label">Redes Sociales:</label>
+                <select class="form-select" id="validationCustom04" name="redSocial"
+                    [(ngModel)]="programador.contacto.redSocial" required>
+                    <option selected disabled value="">Choose...</option>
+                    @for (item of sociales; track $index) {
+                    <option [value]="item">{{item}}</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom05" class="form-label">Telefóno</label>
+                <input type="text" class="form-control" name="telefono" [(ngModel)]="programador.contacto.telefono"
+                    required>
+            </div>
+        </div>
+    </div>
+    <div class="col-12">
+        <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Submit form</button>
+    </div>
+</form>
