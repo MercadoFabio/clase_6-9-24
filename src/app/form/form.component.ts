@@ -1,15 +1,18 @@
 import {
   Component,
   EventEmitter,
+  inject,
   Input,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { LIST_HABILIDADES, LIST_REDES_SOCIALES } from '../storage';
-import { Programador } from '../programador';
 import { FormsModule, NgForm } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { Programador } from '../programador';
+import { CommonModule, NgTemplateOutlet } from '@angular/common';
+import moment from 'moment';
+import { ProgramdorServiceService } from '../programdor-service.service';
 
 @Component({
   selector: 'app-form',
@@ -18,43 +21,50 @@ import { CommonModule } from '@angular/common';
   templateUrl: './form.component.html',
   styleUrl: './form.component.css',
 })
-export class FormComponent implements OnChanges {
+export class FormComponent implements OnInit {
+  ngOnInit(): void {
+    // Configurar la fecha inicial en el formato correcto
+    const today = new Date(2010, 0, 10); // Recuerda que los meses en JavaScript son 0-indexados (noviembre es 10)
+    this.prog.fechaNacimiento = moment(today).format('YYYY-MM-DD'); // libreria moment
+    //this.prog.fechaNacimiento = today.toISOString().split('T')[0]
+    console.log(this.prog.fechaNacimiento); // Debería mostrar la fecha en formato yyyy-MM-dd
+  }
+  //@Input() progEdit = new Programador();
+
+  prog: Programador = new Programador();
+
+  listHabilidades: string[] = ['.Net', 'Java', 'Javascript', 'AWS'];
+
   habilidadSeleccionada: string = '';
-  habilidades: string[] = LIST_HABILIDADES;
-  sociales: string[] = LIST_REDES_SOCIALES;
-  programador: Programador = new Programador();
-  @Output() emitForm = new EventEmitter<Programador>();
-  @Input() programdorEdit = new Programador();
-  ngOnChanges(): void {
-    if (this.programdorEdit.id != 0) {
-      this.programador.apellido = this.programdorEdit.apellido;
-      this.programador.nombre = this.programdorEdit.nombre;
-      this.programador.id = this.programdorEdit.id;
-      this.programador.ciudad = this.programdorEdit.ciudad;
-      this.programador.puestoPostulacion =
-        this.programdorEdit.puestoPostulacion;
-      this.programador.habilidades = this.programdorEdit.habilidades;
-      this.programador.contacto.email = this.programdorEdit.contacto.email;
-      this.programador.contacto.redSocial =
-        this.programdorEdit.contacto.redSocial;
-      this.programador.contacto.telefono =
-        this.programdorEdit.contacto.telefono;
+ 
+   //constructor(private progService:ProgramdorServiceService) {}
+   private progService = inject(ProgramdorServiceService)
+  //@Output() enviadoEmit = new EventEmitter<Programador>();
+  sendForm(form: NgForm) {
+    //TODO:
+    if (form.valid) {
+      const prog = {...this.prog}
+      //this.enviadoEmit.emit(prog);
+      this.progService.addProg(prog)
+      this.prog = {
+        apellido: '',
+        nombre: '',
+        habilidades: [],
+        fechaNacimiento : '',
+        contacto: {
+          email: '',
+          redSocial: '',
+        },
+      };
+      this.habilidadSeleccionada = '';
     }
   }
   agregarHabilidades() {
-    if (!this.programador.habilidades.includes(this.habilidadSeleccionada)) {
-      this.programador.habilidades.push(this.habilidadSeleccionada);
-    }
+    if (!this.prog.habilidades.includes(this.habilidadSeleccionada))
+      this.prog.habilidades.push(this.habilidadSeleccionada);
   }
-  eliminarhabilidad(index: number) {
-    this.programador.habilidades.splice(index, 1);
+  eliminarHabilidades(index: number) {
+    this.prog.habilidades.splice(index, 1);
   }
-  sendForm(form: NgForm) {
-    console.log(form);
-    if (form.valid) {
-      console.log(this.programador);
-      this.emitForm.emit(this.programador);
-      this.programador = new Programador();
-    }
-  }
+ 
 }

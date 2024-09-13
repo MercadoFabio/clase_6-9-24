@@ -1,94 +1,64 @@
-<form #form="ngForm" (ngSubmit)="sendForm(form)" class="mt-2 container row g-3 needs-validation ">
-    <h1>Formulario De trabajo</h1>
-    <div class="col-md-6">
-        <label class="form-label">Nombre</label>
-        <input [ngClass]="{'is-invalid': nombre.invalid && (nombre.dirty || nombre.touched),'is-valid':nombre.valid}"
-            #nombre="ngModel" type="text" class="form-control" name="nombre" [(ngModel)]="programador.nombre" required
-            minlength="5">
+<form #form="ngForm" (ngSubmit)="sendForm(form)" class="row g-3 container">
+    <h1>Datos del programador</h1>
+    <div class="col-md-4">
+        <label for="validationCustom01" class="form-label">Nombre:</label>
+        <input #nombre="ngModel"
+            [ngClass]="{'is-invalid': nombre.invalid  && (nombre.dirty || nombre.touched),'is-valid': nombre.valid }"
+            type="text" class="form-control" name="nombre" [(ngModel)]="prog.nombre" required minlength="5">
         @if(nombre.invalid && (nombre.dirty || nombre.touched)){
-        @if(nombre.getError('required')){
-
+        @if(nombre.getError('required')) {
         <div class="text-danger">El nombre es obligatorio</div>
-        }@else {
-        <div class="text-danger">El nombre debe contener como minimo 5 carateres</div>
+        }@else{
+        <div class="text-danger">Debe contener como minimo 5 caracteres.</div>
+        }}
+    </div>
+    <div class="col-md-4">
+        <label for="validationCustom02" class="form-label">Apellido:</label>
+        <input #apellido="ngModel" type="text" class="form-control" name="apellido" [(ngModel)]="prog.apellido"
+            required>
+        @if(apellido.getError('required') && apellido.dirty){
+        <div class="text-danger">El apellido es obligatorio.</div>
+        }
+    </div>
+    <div class="col-md-4">
+        <label for="validationCustom02" class="form-label">Fecha nacimiento:</label>
+        <input #fecha="ngModel" type="date" class="form-control" name="fechaNacimiento"
+            [(ngModel)]="prog.fechaNacimiento" [value]="prog.fechaNacimiento" required min="2010-01-01" max="2025-12-31" mask="00-00-0000">
+        @if(fecha.invalid && fecha.dirty){
+        <div class="text-danger">la fecha es obligatorio.</div>
 
         }
-        }
-    </div>
-    <div class="col-md-6">
-        <label for="validationCustom02" class="form-label">Apellido</label>
-        <input #apellido="ngModel"
-            [ngClass]="{'is-invalid': apellido.invalid && (apellido.dirty || apellido.touched) ,'is-valid':apellido.valid}"
-            type="text" class="form-control" name="apellido" [(ngModel)]="programador.apellido" required>
-        @if (apellido.getError('required') && (apellido.dirty || apellido.touched)) {
-        <div class="text-danger">EL apellido es obligatorio.</div>
-        }
-    </div>
-    <div class="col-md-6">
-        <label for="validationCustomUsername" class="form-label">Puesto:</label>
-        <div class="input-group has-validation">
-            <input type="text" class="form-control" name="puestoPostulacion" [(ngModel)]="programador.puestoPostulacion"
-                required>
         </div>
-    </div>
-    <div class="col-md-6">
-        <label for="validationCustom03" class="form-label">Ciudad:</label>
-        <input type="text" class="form-control" name="ciudad" [(ngModel)]="programador.ciudad" required>
-    </div>
-    <div class="col-md-6">
-        <label for="validationCustomUsername" class="form-label">Remuneracion:</label>
-        <div class="input-group has-validation">
-            <input type="number" class="form-control" name="remuneracion" [(ngModel)]="programador.remuneracion"
-                required>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <label for="validationCustom04" class="form-label ">Habilidades</label>
-        <select class="form-select" name="habilidadSeleccionada"
-            [(ngModel)]="habilidadSeleccionada">
-            <option selected disabled value="">Choose...</option>
-            @for (item of habilidades; track $index) {
+    <div class="col-md-12">
+        <label for="validationCustomUsername" class="form-label">Habilidades</label>
+        <select class="form-select" name="habilidadSeleccionada" [(ngModel)]="habilidadSeleccionada">
+            @for(item of listHabilidades ; track $index){
             <option [value]="item">{{item}}</option>
             }
         </select>
-        <div>
-
-            <button class="btn btn-primary mt-2" (click)="agregarHabilidades()">+</button>
+        <div class="mt-2">
+            <button type="button" class="btn btn-primary" (click)="agregarHabilidades()">+</button>
+            @for(habilidad of prog.habilidades; track $index){
+            <span class="badge bg-primary m-1">{{habilidad}}
+                <button type="button" class="btn-close btn-close-white" (click)="eliminarHabilidades($index)"></button>
+            </span> }
         </div>
-        @if(programador.habilidades.length > 0){
-        @for (item of programador.habilidades; track $index) {
-        <span class="badge bg-primary m-1">{{item}}
-            <button type="button" class="btn-close btn-close-white" (click)="eliminarhabilidad($index)"></button>
-        </span>
-        }}
+
     </div>
+    <hr>
+    <div ngModelGroup="contacto" class="row container mt-2">
 
-
-    <div class="container mt-2" ngModelGroup="contacto">
-        <h3>Datos de contacto</h3>
-        <div class="row g-3">
-            <div class="col-md-4">
-                <label for="validationCustom05" class="form-label">Email</label>
-                <input type="text" class="form-control" name="email" [(ngModel)]="programador.contacto.email" required>
-            </div>
-            <div class="col-md-4">
-                <label for="validationCustom04" class="form-label">Redes Sociales:</label>
-                <select class="form-select" id="validationCustom04" name="redSocial"
-                    [(ngModel)]="programador.contacto.redSocial" required>
-                    <option selected disabled value="">Choose...</option>
-                    @for (item of sociales; track $index) {
-                    <option [value]="item">{{item}}</option>
-                    }
-                </select>
-            </div>
-            <div class="col-md-4">
-                <label for="validationCustom05" class="form-label">Telefóno</label>
-                <input type="text" class="form-control" name="telefono" [(ngModel)]="programador.contacto.telefono"
-                    required>
-            </div>
+        <h3>Datos del contacto</h3>
+        <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">Email:</label>
+            <input type="text" class="form-control" name="email" [(ngModel)]="prog.contacto.email">
+        </div>
+        <div class="col-md-4">
+            <label for="validationCustom02" class="form-label">Red Social:</label>
+            <input type="text" class="form-control" name="redSocial" [(ngModel)]="prog.contacto.redSocial">
         </div>
     </div>
-    <div class="col-12">
-        <button class="btn btn-primary" type="submit" [disabled]="form.invalid">Submit form</button>
+    <div>
+        <button type="submit" class="btn btn-primary">Enviar</button>
     </div>
 </form>

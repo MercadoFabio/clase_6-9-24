@@ -1,5 +1,5 @@
 export class Contacto {
-    email : string ='';
-    redSocial : string = '';
-    telefono : string ='';
+    email : string = '';
+    redSocial : string= '';
+
 }

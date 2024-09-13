@@ -1,42 +1,16 @@
-@if(mostrar){
-  <app-form (emitForm)="add($event)" [programdorEdit]="progEdit"></app-form>
-}
+<div class="container text-center mt-5">
+  <select class="form-select" name="" id="" [(ngModel)]="opcionSeleccionada">
+    <option value="1">Nuevo Programador</option>
+    <option value="2">Lista Programador</option>
+  </select>
+</div>
 
-
-@if (mostrarLista){
-  <button class="btn btn-primary" (click)="nuevo()">+</button>
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Nombre Completo</th>
-      <th scope="col">Puesto</th>
-      <th scope="col">Ciudad</th>
-      <th scope="col">Habilidades</th>
-      <th scope="col">Remuneracion</th>
-      <th scope="col">Email</th>
-      <th scope="col">Red Social</th>
-      <th scope="col">Telefóno</th>
-      <th scope="col">Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (item of lstProgramdores; track $index) {
-    <tr>
-      <th scope="row">{{item.id}}</th>
-      <td>{{item.apellido}}, {{item.nombre}}</td>
-      <td>{{item.puestoPostulacion}}</td>
-      <td>{{item.ciudad}}</td>
-      <td>{{item.habilidades.join(", ")}}</td>
-      <td>{{item.remuneracion | currency}}</td>
-      <td>{{item.contacto.email}}</td>
-      <td>{{item.contacto.redSocial}}</td>
-      <td>{{item.contacto.telefono}}</td>
-      <td><button class="btn btn-danger" (click)="remove($index)">-</button>
-        <button class="btn btn-success" (click)="editar(item)">%</button>
-      </td>
-    </tr>
-    }
-  </tbody>
-</table>
-}
+<div class="container mt-2">
+  @if(opcionSeleccionada === '1'){
+  <app-form></app-form>
+  }
+  @if(opcionSeleccionada ==='2'){
+  <app-lista></app-lista>
+  <app-details></app-details>
+  }
+</div>
